@@ -1,0 +1,6 @@
+Title;First Name;Middle Name;Last Name,;Mobile Phone;Email Address
+Sig.ra;Emanuela;;Cannarella Bogdanova;3518676927;emanuela.cannarellabogdanova@studente.com
+Sig.ra;Camilla;;Vallaspra;3295839597;camilla.vallaspra@studente.com
+Sig.ra;Katsiaryna;;Belenkaya;3264860589;katsiaryna.belenkaya@studente.com
+Sig;Paolo;;Cancemi;3284739603;paolo.cancemi@studente.com
+Sig;Riccardo;;Buldini;3475649760;riccardo.buldini@studente.com

@@ -1,0 +1,49 @@
+{
+	"rubrica": [
+	{
+	"nome":"Emanuela",
+	"cognome":"Cannarella",
+	"età":23,
+	"data di nascita":"01.01.2000",
+	"email":"emanuela.cannarella@studente.com",
+	"telefono":"3518676927",
+	"città_di_residenza":"Viareggio"
+	},
+	{
+	"nome":"Camilla",
+	"cognome":"Vallaspra",
+	"età":23,
+	"data di nascita":"02.02.2000",
+	"email":"camilla.vallaspra@studente.com",
+	"telefono":"3518676927",
+	"città di residenza":"Genova"
+	},
+	{
+	"nome":"Katsiaryna",
+	"cognome":"Belenkaya",
+	"età":23,
+	"data di nascita":"03.03.2000",
+	"email":"katsiaryna.belenkaya@studente.com",
+	"telefono":"3518676927",
+	"città di residenza":"Milano"
+	},
+	{
+    "nome":"Paolo",
+	"cognome":"Cancemi",
+	"età":23,
+	"data di nascita":"04.04.2000",
+	"email":"paolo.cancemi@studente.com",
+	"telefono":"3518676927",
+	"città di residenza":"Roma"
+	},
+	{
+    "nome":"Riccardo",
+	"cognome":"Buldini",
+	"età":23,
+	"data di nascita":"05.05.2000",
+	"email":"riccardo.buldini@studente.com",
+	"telefono":"3518676927",
+	"città di residenza":"Torino"
+	}
+  ]
+}
