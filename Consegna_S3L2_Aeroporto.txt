@@ -1,0 +1,90 @@
+CREATE TABLE Aeroporto (
+    Citta varchar(50) NOT NULL,
+    Nazione varchar(50) NOT NULL,
+    NumPiste int);
+
+INSERT INTO Aeroporto VALUES ('Torino', 'ITA', 3);
+INSERT INTO Aeroporto VALUES ('Frankfurt', 'DE', NULL);
+INSERT INTO Aeroporto VALUES ('Paris', 'FR', 2);
+INSERT INTO Aeroporto VALUES ('Barcelona', 'ES', NULL);
+INSERT INTO Aeroporto VALUES ('Pisa', 'ITA', 1);
+INSERT INTO Aeroporto VALUES ('Bologna', 'ITA', 2);
+INSERT INTO Aeroporto VALUES ('Valencia', 'ES', NULL);
+INSERT INTO Aeroporto VALUES ('Stuttgart', 'DE', 4);
+INSERT INTO Aeroporto VALUES ('Torino', 'ITA', 3);
+INSERT INTO Aeroporto VALUES ('Lyon', 'FR', 2);
+
+#/* aeroporto di città in cui non è noto il numero di piste */
+#SELECT Citta FROM Aeroporto WHERE NumPiste is NULL;
+
+CREATE TABLE Volo (
+    IdVolo varchar(50),
+    GiornoSett varchar(50),
+    CittaPart varchar(50),
+    OraPart time,
+    CittaArriv varchar(50),
+    OraArriv time, 
+    TipoAereo varchar(50));
+
+INSERT INTO Volo VALUES ('AD588', 'Lunedì', 'Torino', '9:00', 'Catania', '10:30', 'Airbus');
+INSERT INTO Volo VALUES ('LH765', 'Mercoledì', 'Frankfurt', '10:55', 'Rome', '12:31', 'Airbus');
+INSERT INTO Volo VALUES ('RY820', 'Giovedì', 'Paris', '13:25', 'Pisa', '15:00', 'Airbus');
+INSERT INTO Volo VALUES ('VU889', 'Martedì', 'Barcelona', '16:35', 'Venezia', '18:40', 'Airbus');
+INSERT INTO Volo VALUES ('AZ975', 'Venerdì', 'Pisa', '12:50', 'Milano', '13:30', 'Airbus');
+INSERT INTO Volo VALUES ('AZ432', 'Sabato', 'Bologna', '10:48', 'Toulouse', '12:20', 'Boeing');
+INSERT INTO Volo VALUES ('VU432', 'Lunedì', 'Valencia', '16:20', 'Bologna', '17:55', 'Airbus');
+INSERT INTO Volo VALUES ('LH643', 'Domenica', 'Stuttgart', '21:50', 'Bologna', '23:10', 'Airbus');
+INSERT INTO Volo VALUES ('RY24', 'Mercoledì', 'Torino', '07:30', 'Frankfurt', '9:00', 'Airbus');
+INSERT INTO Volo VALUES ('AZ274', 'Martedì', 'Lyon', '23:00', 'Berlin', '00:50', 'Boeing');
+
+#/* tipi di aereo usati nei voli che partono da Torino */
+#SELECT TipoAereo FROM Volo WHERE CittaPart = 'Torino';
+
+#/* città da cui partono voli diretti a Bologna */
+#SELECT CittaPart FROM Volo WHERE CittaArriv = 'Bologna';
+
+#/* città da cui parte e arriva il volo con codice AZ274 */
+#SELECT CittaPart FROM Volo WHERE IdVolo = 'AZ274';
+
+#/* voli del weekend partiti da paesi stranieri */
+#SELECT IdVolo FROM Volo WHERE GiornoSett IN ('Sabato', 'Domenica') AND CittaPart NOT IN ('Pisa', 'Torino', 'Bologna'); 
+#SELECT IdVolo FROM Aeroporto, Volo WHERE Citta = CittaPart AND Nazione != 'ITA';
+#SELECT IdVolo FROM Aeroporto, Volo WHERE Citta = CittaPart AND GiornoSett IN ('Sabato', 'Domenica') AND Nazione != 'ITA';
+#SELECT IdVolo FROM Aeroporto, Volo WHERE GiornoSett = 'Venerdì';
+
+CREATE TABLE Aereo (
+    TipoAereo varchar(50),
+    NumPasseggeri int,
+    QtaMerci int);
+
+INSERT INTO Aereo VALUES ('Airbus', 100, 50);
+INSERT INTO Aereo VALUES ('Airbus', 200, 60);
+INSERT INTO Aereo VALUES ('Airbus', 150, 70);
+INSERT INTO Aereo VALUES ('Airbus', 150, 60);
+INSERT INTO Aereo VALUES ('Airbus', 200, 60);
+INSERT INTO Aereo VALUES ('Boeing', 350, 80);
+INSERT INTO Aereo VALUES ('Airbus', 100, 60);
+INSERT INTO Aereo VALUES ('Airbus', 150, 60);
+INSERT INTO Aereo VALUES ('Airbus', 150, 60);
+INSERT INTO Aereo VALUES ('Boeing', 500, 100);
+
+#/* quanti voli partono da Torino */
+#SELECT COUNT(idVolo) FROM Volo WHERE CittaPart = 'Torino';
+
+#/* quanti aerei hanno una quantità di merce maggiore a 65 */
+#SELECT COUNT(TipoAereo) FROM Aereo WHERE QtaMerci > 65;
+
+#/* tipo di aereo con quantità max di merci */
+#SELECT TipoAereo FROM Aereo WHERE QtaMerci = (SELECT MAX(QtaMerci) AS QtaMAX FROM Aereo);
+
+#SELECT TipoAereo FROM Aereo ORDER BY QtaMerci DESC LIMIT 1;
+
+#/* qual è il numero medio di piste negli aeroporti */
+#SELECT AVG (NumPiste) FROM Aeroporto;
+#SELECT ROUND (AVG (NumPiste)) FROM Aeroporto;
+
+#/* quanti aerei trasportano tra 100 e 250 passeggeri */
+#SELECT COUNT(TipoAereo) FROM Aereo WHERE NumPasseggeri BETWEEN '100' AND '250';
+
+#*/ tipo areo che trasporta tra 100 e 250 passeggeri ordinati in base al min quantità merci */
+#SELECT TipoAereo FROM Aereo WHERE NumPasseggeri BETWEEN 100 AND 250 ORDER BY QtaMerci ASC LIMIT 1;
