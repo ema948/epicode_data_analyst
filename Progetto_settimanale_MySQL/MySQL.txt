@@ -1,0 +1,184 @@
+-- 1 tabella vendite
+CREATE TABLE vendite (
+    id_transazione int PRIMARY KEY,
+    prodotto varchar(50),
+    prezzo decimal (10, 2),
+    sconto decimal (5, 2)
+);
+
+-- 2.1 dati tabella vendite
+INSERT INTO vendite (id_transazione, prodotto, prezzo, sconto) VALUES 
+    (1, 'Tavolo da pranzo', 499.99, 0.10),
+    (2, 'Frigorifero', 799.99, 0.35),
+    (3, 'Aspirapolvere', 149.99, 0.30),
+    (4, 'Quadro decorativo', 99.99, 0.60),
+    (5, 'Set di pentole', 59.99, 0.10),
+    (6, 'Aspirapolvere', 149.99, 0.50),
+    (7, 'Aspirapolvere', 149.99, 0.65),
+    (8, 'Divano', 899.99, 0.10),
+    (9, 'Tavolo da pranzo', 499.99, 0.5),
+    (10, 'Forno a microonde', 119.99, 0.10),
+    (11, 'Set di pentole', 59.99, 0.40),
+    (12, 'Specchio da parete', 99.99, 0.55),
+    (13, 'Divano', 899.99, 0.50),
+    (14, 'Aspirapolvere', 149.99, 0.70),
+    (15, 'Specchio da parete', 99.99, 0.10);
+
+-- 1.2 tabella dettagli_vendite
+CREATE TABLE dettagli_vendite (
+    id_transazione int PRIMARY KEY,
+    data_transazione date,
+    quantità int
+);
+
+-- 2.2 dati tabella dettagli_vendite
+INSERT INTO dettagli_vendite (id_transazione, data_transazione, quantità) VALUES 
+    (1, '2024-01-01', 5),
+    (2, '2024-01-01', 3),
+    (3, '2024-01-01', 2),
+    (4, '2024-01-03', 7),
+    (5, '2024-01-03', 4),
+    (6, '2024-01-04', 9),
+    (7, '2024-01-06', 3),
+    (8, '2024-01-06', 6),
+    (9, '2024-01-06', 4),
+    (10, '2024-01-06', 2),
+    (11, '2024-01-07', 3),
+    (12, '2024-01-07', 8),
+    (13, '2024-01-07', 2),
+    (14, '2024-01-07', 3),
+    (15, '2024-01-08', 5);
+/*
+-- Query semplici
+-- 3.1 vendite avvenute in una specifica data
+SELECT COUNT(*) AS vendite_1gennaio
+FROM dettagli_vendite d
+JOIN vendite v ON v.id_transazione = d.id_transazione
+WHERE data_transazione = '2024-01-01';
+
+-- oppure se si vuole avere un quadro più dettagliato
+SELECT v.id_transazione, v.prodotto, v.prezzo, v.sconto, d.quantità
+FROM dettagli_vendite d
+    JOIN vendite v ON v.id_transazione = d.id_transazione
+WHERE data_transazione = '2024-01-01';
+
+-- 3.2 elenco delle vendite con sconti maggiori del 50%
+SELECT id_transazione, prodotto, sconto
+FROM vendite
+WHERE sconto > 0.5
+ORDER BY sconto DESC;
+
+-- Aggregazione dei Dati
+-- 4.1 totale delle vendite (costo) per categoria
+SELECT v.prodotto, SUM(v.prezzo*d.quantità*(1-v.sconto)) AS totale_vendite
+FROM vendite v
+    JOIN dettagli_vendite d ON d.id_transazione = v.id_transazione
+GROUP BY v.prodotto
+ORDER BY v.prodotto;
+
+-- 4.2 numero totale di prodotti venduti per ogni categoria
+SELECT v.prodotto, SUM(d.quantità) AS totale_quantità
+FROM dettagli_vendite d 
+    JOIN vendite v ON v.id_transazione = d.id_transazione
+GROUP BY v.prodotto
+ORDER BY totale_quantità DESC;
+    
+-- Funzioni di data
+-- 5.1 vendite dell'ultima settimana (se fosse stato dell'ultimo trimestre SELECT QUARTER)
+SELECT d.data_transazione, v.id_transazione, v. prodotto, v.prezzo, v.sconto, d.quantità
+FROM vendite v
+    JOIN dettagli_vendite d ON v.id_transazione = d.id_transazione
+WHERE d.data_transazione >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);
+
+-- 5.2 totale delle vendite per ogni giorno (se fosse stato per mese SELECT MONTH)
+SELECT DATE(data_transazione), SUM(v.prezzo*d.quantità*(1-v.sconto)) AS totale_vendite
+FROM vendite v
+    JOIN dettagli_vendite d ON d.id_transazione = v.id_transazione
+GROUP BY data_transazione; 
+
+-- Analisi degli sconti
+-- 6. prodotto con lo sconto medio più alto
+SELECT prodotto, AVG(sconto) AS sconto_medio 
+FROM vendite
+GROUP BY prodotto
+HAVING sconto_medio = (
+    SELECT MAX(media)
+    FROM (
+        SELECT AVG(sconto) AS media 
+        FROM vendite
+        GROUP BY prodotto) AS MAX_media
+    );
+
+-- Variazioni delle Vendite
+-- 7. confronta le vendite giorno per giorno per vedere l'incremento o il decremento delle vendite. 
+-- Calcola l’incremento o decremento giorno per giorno 
+SELECT 
+    DATE(data_transazione) AS data, 
+    SUM(v.prezzo*d.quantità*(1-v.sconto)) AS totale_vendite
+FROM dettagli_vendite d
+    JOIN vendite v ON v.id_transazione = d.id_transazione
+GROUP BY data_transazione;
+-- sulla base del totale vendita per giorno ricavato dalla tabella sopra, indicare solo se 
+-- il totale vendita giornaliero è superiore a quello del giorno 01-01-2024. In caso contrario si 
+-- consideri negli altri giorni un decremento delle vendite 
+SELECT 
+    DATE(data_transazione) AS data,
+    SUM(v.prezzo*d.quantità*(1-v.sconto)) AS totale_vendite
+FROM dettagli_vendite d
+    JOIN vendite v ON v.id_transazione = d.id_transazione
+GROUP BY data_transazione
+HAVING totale_vendite > 4019.9215;
+
+-- Analisi giorni feriali vs festivi
+-- 8. confronta le vendite totali nei giorni feriali e festivi
+SELECT 
+    DAYNAME(d.data_transazione) AS nome_giorno,
+    SUM(v.prezzo*d.quantità*(1-v.sconto)) AS totale_vendite
+FROM dettagli_vendite d
+    JOIN vendite v ON v.id_transazione = d.id_transazione
+GROUP BY nome_giorno;
+
+SELECT 
+    DAYNAME(d.data_transazione) AS nome_giorno,
+    SUM(v.prezzo*d.quantità*(1-v.sconto)) AS totale_vendite
+FROM dettagli_vendite d
+    JOIN vendite v ON v.id_transazione = d.id_transazione 
+HAVING 
+    DAYNAME(d.data_transazione) IN ('Monday', 'Wednesday', 'Thursday') 
+    OR 
+    DAYNAME(d.data_transazione) IN ('Saturday', 'Sunday') 
+    AS subquery;
+-- N.B. IL CODICE NON FUNZIONA
+
+-- 9. creare tabella clienti
+CREATE TABLE clienti (
+    id_cliente int,
+    id_vendita int
+);
+
+-- dati tabella clienti
+INSERT INTO clienti (id_cliente, id_vendita) VALUES
+    (1001, 1),
+    (1002, 2),
+    (1003, 3),
+    (1004, 4),
+    (1005, 5),
+    (1002, 6),
+    (1002, 7),
+    (1002, 8),
+    (1005, 9),
+    (1002, 10),
+    (1002, 11),
+    (1002, 12),
+    (1005, 13),
+    (1002, 14),
+    (1004, 15);
+    
+-- Clienti Fedeli
+-- 9. Supponendo di avere una tabella clienti con i campi IDCliente e IDVendita, 
+-- scrivi una query per trovare i top 3 clienti con il maggior numero di acquisti
+-- N.B. in MySQL non è supportato il comando SELECT TOP
+SELECT id_cliente, COUNT(id_vendita) AS numero_acquisti
+FROM clienti
+GROUP BY id_cliente
+ORDER BY numero_acquisti DESC LIMIT 3;
