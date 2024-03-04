@@ -1,0 +1,54 @@
+Progetto settimanale Google Looker consegna S11L5.
+
+Per questa analisi ho raccolto i dati sulla mia abitudine del sonno, i dati raccolti 
+vanno dal 7 dicembre 2023 al 4 marzo 2024 (quasi tre mesi di dati). Di seguito il link
+al file Google Sheets:
+https://docs.google.com/spreadsheets/d/10Wq3IlHCCaM4gd5d15xeJgeD-EdzhtQEvzLLXlQLfPw/edit?usp=sharing
+Se il link non dovesse funzionare (malgrado abbia messo che chiunque abbia il link possa aprirlo)
+ho inserito il file Excel su GitHub.
+
+Link alla dashboard:
+https://lookerstudio.google.com/reporting/16b5af9e-446f-44a2-9458-72fb01909f43
+
+Si dice che sia buona abitudine andare a letto sempre alla stessa ora e assicurarsi di dormire 
+almeno 7-9 ore. Normalmente, io vado a letto sempre tardi e mi sveglio altrettando tardi. 
+Per me era interessante vedere la differenza di sonno e degli orari che facevo 
+mettendo a confronto i giorni feriali (dal lunedì al venerdì) con quelli festivi (sabato e domenica,
+inclusi i giorni di vacanza che abbiamo fatto, dal 23 dicembre al 7 gennaio).
+
+I dati sono stati raccolti in Excel; per il calcolo delle ore di sonno ho usato la formula:
+SE(orario fine > fine, fine-inizio, 1-somma due orari)
+
+Siccome su Google Looker non riuscivo a impostare il calcolo della media per i dati delle ore
+perché la tipologia di dato su Excel è impostato su ora, ho convertito le tre colonne "Ora inizio,
+Ora fine e Durata sonno" in numero usando la formula =VALORE(ORA(colonna)) così da poterci calcolare 
+la media in Google Looker sulle nuove tre colonne "Ora inizio in numeri, Ora fine in numeri, Durata 
+sonno in numeri". 
+Per i colori della dashboard ho scelto colori che vanno dal blu al verde, in quanto sono tonalità che 
+favoriscono il sonno (in base a quanto scritto in questo breve articolo: 
+https://www.lagiustapostura.it/it/le-nostre-news/qual-e-il-colore-che-fa-dormire-di-piu#:~:text=Come%20si%20nota%20dai%20risultati,lusso%20ed%20eleganza%20all'ambiente.)
+La palette di colori dal blu al verde è stata estratta dal sito: https://coolors.co/palettes/trending
+
+Da notare che i grafici a scheda sono fissi in quanto per visualizzare l'orario ho dovuto impostare la tipogia del dato
+in numero e da lì selezionare la durata (che però mi riportava il dato in secondi; ho risolto il problema personalizzando
+la visualizzazione scrivendolo a mano (es. per indicare l'orario alle 7 del mattino -> 7:00). Invece nella tabella gli orari sono indicati
+in numero (diversamente non riuscivo a fare). 
+Per comodità due grafici a scheda sono stati nominati come segue:
+- Media ora 😴, indica l'orario in cui mi sono addormentata;
+- Media ora ⏰, indica l'orario in cui mi sono svegliata.
+
+Ho inserito un oggetto di controllo, filtro per la data (solo nella prima pagina, perché nella seconda ho pensavo fosse meglio non poter navigare
+tra le diverse date). In più, credo che su Google Looker non si possa impostare filtri solo per i giorni festivi.
+
+
+Condivido un'altra dashboard realizzata su un dataset scaricato da kaggle: https://www.kaggle.com/datasets/elvinrustam/coursera-dataset
+in cui ho eliminato alcune colonne che ritenevo poco significative.
+Link al dataset modificato: https://docs.google.com/spreadsheets/d/1gOxWhfIyydRpEwHhNKQ0QDikVFpBu8k9ryS96t4v4L8/edit?usp=sharing
+Link alla dashboard: https://lookerstudio.google.com/reporting/726c3952-45ba-4b0c-b473-3c09ad057030
+
+Si tratta di una dashboard realizzata sui corsi erogati da Coursera (piattaforma online che propone corsi di formazione), 
+in cui si mostra il numero di corsi offerti (livello del corso, durata e tipologia di corso), numero di istituzioni che 
+offrono i corsi, il numero di docenti complessivi e il rating degli studenti. 
+Per i colori ho utilizzato il tema estraibile da Google Looker tramite un'immagine presa dal web del logo di coursera (scritta in blu) 
+andando poi a personalizzare alcuni colori.
+
